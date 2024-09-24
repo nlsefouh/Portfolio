@@ -14,7 +14,7 @@
       } else {
         return await response.text();
       }
-    } catch (error) {
+    } catch (_error) {
       console.warn('Failed to fetch resource:', url);
       return '';
     }
@@ -26,7 +26,7 @@
     const cssContent = await fetchResource(href);
 
     // Resolve relative URLs within CSS (for images, fonts, etc.)
-    const resolvedCSS = cssContent.replace(/url\((?!['"]?(?:data|https?|ftp):)['"]?([^'")]+)['"]?\)/g, function(match, relativeUrl) {
+    const resolvedCSS = cssContent.replace(/url\((?!['"]?(?:data|https?|ftp):)['"]?([^'")]+)['"]?\)/g, function(_match, relativeUrl) {
       const absoluteUrl = new URL(relativeUrl, href).href;
       return `url(${absoluteUrl})`;
     });
@@ -40,7 +40,7 @@
   // Helper function to convert images to base64-encoded data URIs
   async function inlineImages(element) {
     const images = element.querySelectorAll('img');
-    for (let img of images) {
+    for (const img of images) {
       if (img.src.startsWith('http')) {
         const dataUri = await fetchResource(img.src, true);
         img.src = dataUri; // Replace the src with base64-encoded data URI
@@ -57,7 +57,7 @@
 
   // Inline all external CSS files
   const linkElements = [...doc.querySelectorAll('link[rel="stylesheet"]')];
-  for (let link of linkElements) {
+  for (const link of linkElements) {
     const inlineStyleElement = await inlineCSS(link);
     link.replaceWith(inlineStyleElement);
   }
